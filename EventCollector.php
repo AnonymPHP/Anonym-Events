@@ -33,12 +33,13 @@
         /**
          * Uygulamayı atar
          *
-         * @param Application $application
+         * @param Application $application AnonymFramework Application sınıfı
+         * @param array $listeners Dinleyiciler
          */
 
-        public function __construct(Application $application)
+        public function __construct(Application $application, array $listeners = [])
         {
-
+            $this->setListeners($listeners);
             $this->application = $application;
         }
 

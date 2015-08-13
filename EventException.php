@@ -9,7 +9,7 @@
 
 
 namespace Anonym\Components\Event;
-
+use Exception;
 /**
  * Class EventException
  * @package Anonym\Components\Event

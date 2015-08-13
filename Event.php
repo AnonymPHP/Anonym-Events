@@ -45,6 +45,11 @@ class Event
 
     private $list;
 
+    /**
+     * Sınıfı başlatır
+     *
+     * @param \Anonym\Components\Event\EventCollector|null $collector
+     */
     public function __construct(EventCollector $collector = null)
     {
 
