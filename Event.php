@@ -95,7 +95,7 @@ class Event
                 throw new EventListenerException(sprintf('%s adındaki Event\' in herhangi bir dinleyicisi yok', $eventName));
             }
         } else {
-            throw new InvalidArgumentException('Girdiğiniz Event, geçerli bir event değil');
+            throw new EventException('Girdiğiniz Event, geçerli bir event değil');
         }
     }
 
