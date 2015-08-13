@@ -61,7 +61,7 @@ class Event
      *
      * @param string $eventName
      * @return array
-     * @throws Exception
+     * @throws EventNotFoundException
      */
     public function fire($eventName = '')
     {
