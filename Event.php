@@ -130,6 +130,13 @@ class Event
         return $response;
     }
 
+    /**
+     * Dinleyicileri döndürür
+     *
+     * @param string $eventName
+     * @return mixed
+     * @throws EventNameException
+     */
     public function getListeners($eventName = '')
     {
 
