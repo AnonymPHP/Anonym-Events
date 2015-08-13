@@ -10,8 +10,21 @@
 
 namespace Anonym\Components\Event;
 
-
-class EventException
+/**
+ * Class EventException
+ * @package Anonym\Components\Event
+ */
+class EventException extends Exception
 {
+
+    /**
+     * İstisnayı oluşturur
+     *
+     * @param string $message
+     */
+    public function __construct($message = '')
+    {
+        $this->message = $message;
+    }
 
 }
