@@ -80,7 +80,7 @@ class Event
                         $eventName = $this->list[$eventName];
                         $eventName = new $eventName();
                     } else {
-                        throw new Exception(sprintf('%s isimli bir ön tanımlı event bulunamadı', $eventName));
+                        throw new EventNotFoundException(sprintf('%s isimli bir ön tanımlı event bulunamadı', $eventName));
                     }
                 }
             }
