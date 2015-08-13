@@ -56,14 +56,16 @@ class Event
     }
 
     /**
-     * Event'i yürütür
-     * $eventName 'sınıfın ismi veya direk sınıfın instance i olabilir
+     * Eventi ateşler
      *
      * @param string $eventName
      * @return array
+     * @throws EventException
+     * @throws EventListenerException
+     * @throws EventNameException
      * @throws EventNotFoundException
      */
-    public function fire($eventName = '')
+    public function fire($eventName = null)
     {
 
         if (is_string($eventName) || $eventName instanceof EventDispatch) {
