@@ -122,7 +122,7 @@ class Event
                 $response[] = call_user_func_array([$listener, 'handle'], [$eventName]);
             } else {
 
-                throw new Exception(sprintf('%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
+                throw new EventListenerException(sprintf('%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
                     get_class($listener)));
             }
         }
@@ -134,7 +134,7 @@ class Event
     {
 
         if (!is_string($eventName)) {
-            throw new InvalidArgumentException('Event adı geçerli bir string değeri olmalıdır');
+            throw new EventNameException('Event adı geçerli bir string değeri olmalıdır');
         }
 
         return $this->listeners[$eventName];
