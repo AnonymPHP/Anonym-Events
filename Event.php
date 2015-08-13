@@ -52,9 +52,8 @@ class Event
      */
     public function __construct(EventCollector $collector = null)
     {
-
-        $this->collector = $collector;
-        $this->listeners = $this->collector->getListeners();
+        $this->setCollector($collector);
+        $this->listeners = $this->getCollector()->getListeners();
     }
 
     /**
@@ -163,4 +162,60 @@ class Event
     {
         return end($this->firing);
     }
+
+    /**
+     * @return EventDispatch
+     */
+    public function getFiring()
+    {
+        return $this->firing;
+    }
+
+    /**
+     * @param EventDispatch $firing
+     * @return Event
+     */
+    public function setFiring(EventDispatch $firing)
+    {
+        $this->firing = $firing;
+        return $this;
+    }
+
+    /**
+     * @return \Anonym\Components\Event\EventCollector
+     */
+    public function getCollector()
+    {
+        return $this->collector;
+    }
+
+    /**
+     * @param \Anonym\Components\Event\EventCollector $collector
+     * @return Event
+     */
+    public function setCollector(EventCollector $collector)
+    {
+        $this->collector = $collector;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getList()
+    {
+        return $this->list;
+    }
+
+    /**
+     * @param array $list
+     * @return Event
+     */
+    public function setList(array $list)
+    {
+        $this->list = $list;
+        return $this;
+    }
+
+
 }
