@@ -14,7 +14,6 @@ use Exception;
 use Anonym\Components\Event\EventCollector;
 use App\Events\Event as EventDispatch;
 use App\Events\EventListener;
-use InvalidArgumentException;
 /**
  *
  * Class Event
@@ -135,7 +134,7 @@ class Event
     {
 
         if (!is_string($eventName)) {
-            throw new InvalidArgumentException('event adı geçerli bir string değeri olmalıdır');
+            throw new InvalidArgumentException('Event adı geçerli bir string değeri olmalıdır');
         }
 
         return $this->listeners[$eventName];
