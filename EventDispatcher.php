@@ -62,7 +62,7 @@ class EventDispatcher
                         $eventName = $this->listeners[$eventName];
                         $eventName = new $eventName();
                     } else {
-                        throw new EventNotFoundException(sprintf('%s isimli bir ön tanımlı event bulunamadı', $eventName));
+                        throw new EventNotFoundException(sprintf('%s isimli bir Ã¶n tanÄ±mlÄ± event bulunamadÄ±', $eventName));
                     }
                 }
             }
@@ -75,10 +75,10 @@ class EventDispatcher
                 $this->firing[] = $response;
                 return $response;
             } else {
-                throw new EventListenerException(sprintf('%s adındaki Event\' in herhangi bir dinleyicisi yok', $eventName));
+                throw new EventListenerException(sprintf('%s adÄ±ndaki Event\' in herhangi bir dinleyicisi yok', $eventName));
             }
         } else {
-            throw new EventException('Girdiğiniz Event, geçerli bir event değil');
+            throw new EventException('GirdiÄŸiniz Event, geÃ§erli bir event deÄŸil');
         }
     }
 
@@ -111,7 +111,7 @@ class EventDispatcher
             if ($listener instanceof EventListener) {
                 $response[] = call_user_func_array([$listener, 'handle'], [$eventName]);
             } else {
-                throw new EventListenerException(sprintf('%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
+                throw new EventListenerException(sprintf('%s listener sÄ±nÄ±fÄ± EventListenerInterface\' e sahip olmalÄ±dÄ±r',
                     get_class($listener)));
             }
         }
@@ -127,7 +127,7 @@ class EventDispatcher
     public function getListeners($eventName = '')
     {
         if (!is_string($eventName)) {
-            throw new EventNameException('Event adı geçerli bir string değeri olmalıdır');
+            throw new EventNameException('Event adÄ± geÃ§erli bir string deÄŸeri olmalÄ±dÄ±r');
         }
         return $this->listeners[$eventName];
     }
