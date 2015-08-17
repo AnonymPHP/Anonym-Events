@@ -10,8 +10,13 @@
 
 namespace Anonym\Components\Event;
 
-
-class EventListener
+/**
+ * the abstract class of event
+ *
+ * Class EventListener
+ * @package Anonym\Components\Event
+ */
+abstract class EventListener
 {
-
+    // do nothing
 }

@@ -58,8 +58,8 @@ class EventDispatcher
                 if (strstr($eventName, "\\")) {
                     $eventName = new $eventName();
                 } else {
-                    if (isset($this->list[$eventName])) {
-                        $eventName = $this->list[$eventName];
+                    if (isset($this->listeners[$eventName])) {
+                        $eventName = $this->listeners[$eventName];
                         $eventName = new $eventName();
                     } else {
                         throw new EventNotFoundException(sprintf('%s isimli bir ön tanımlı event bulunamadı', $eventName));
@@ -67,7 +67,7 @@ class EventDispatcher
                 }
             }
             if ($this->hasListiner($eventName)) {
-                $listeners = $this->getListeners($eventName);
+                $listeners = (array) $this->getListeners($eventName);
                 $response = $this->runListenersHandle($listeners, $eventInstance);
                 if (count($response) === 1) {
                     $response = $response[0];
