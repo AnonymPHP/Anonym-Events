@@ -13,7 +13,7 @@ namespace Anonym\Components\Event;
 use Exception;
 use Anonym\Components\Event\EventCollector;
 use Anonym\Events\Event as EventDispatch;
-use Anonym\Events\EventListener;
+use Anonym\Listeners\EventListener;
 /**
  *
  * Class Event
