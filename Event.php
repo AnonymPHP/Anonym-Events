@@ -12,8 +12,8 @@ namespace Anonym\Components\Event;
 
 use Exception;
 use Anonym\Components\Event\EventCollector;
-use App\Events\Event as EventDispatch;
-use App\Events\EventListener;
+use Anonym\Events\Event as EventDispatch;
+use Anonym\Events\EventListener;
 /**
  *
  * Class Event
