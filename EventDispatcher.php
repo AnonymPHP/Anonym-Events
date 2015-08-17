@@ -11,14 +11,15 @@
 namespace Anonym\Components\Event;
 use Exception;
 use Anonym\Components\Event\EventCollector;
-use Anonym\Events\Event as EventDispatch;
-use Anonym\Listeners\EventListener;
+use Anonym\Components\Event\Event as EventDispatch;
+use Anonym\Components\Event\EventListener;
+
 /**
  *
  * Class Event
  * @package Anonym
  */
-class Event
+class EventDispatcher
 {
     /**
      * store the list of fired events
