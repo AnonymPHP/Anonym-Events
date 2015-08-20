@@ -41,47 +41,45 @@ class EventDispatcher
     /**
      * execute the event
      *
-     * @param string $eventName the name of event.
+     * @param string|EventDispatch $event the name of event.
      * @return array the response
      * @throws EventException
      * @throws EventListenerException
      * @throws EventNameException
      * @throws EventNotFoundException
      */
-    public function fire($eventName = null)
+    public function fire($event = null)
     {
-        if (is_string($eventName) || $eventName instanceof EventDispatch) {
-            if ($eventName instanceof EventDispatch) {
-                $eventInstance = $eventName;
-                $eventName = get_class($eventName);
-            } elseif (is_string($eventName)) {
-                if (strstr($eventName, "\\")) {
-                    $eventName = new $eventName();
-                } else {
-                    if (isset($this->listeners[$eventName])) {
-                        $eventName = $this->listeners[$eventName];
-                        $eventName = new $eventName();
-                    } else {
-                        throw new EventNotFoundException(sprintf('%s isimli bir ön tanımlı event bulunamadı', $eventName));
-                    }
-                }
+
+        if (is_string($event)) {
+            if (isset($this->listeners[$event])) {
+                $event = $this->listeners[$event];
+                $instance = new $event;
             }
-            if ($this->hasListiner($eventName)) {
-                $listeners = (array) $this->getListeners($eventName);
-                $response = $this->runListenersHandle($listeners, $eventInstance);
+        } else {
+            $instance = $event;
+            $event = get_class($instance);
+        }
+
+        if ($instance instanceof EventDispatch) {
+
+            if ($this->hasListiner($event)) {
+                $listeners = (array)$this->getListeners($event);
+                $response = $this->runListenersHandle($listeners, $instance);
                 if (count($response) === 1) {
                     $response = $response[0];
                 }
                 $this->firing[] = $response;
                 return $response;
             } else {
-                throw new EventListenerException(sprintf('%s adındaki Event\' in herhangi bir dinleyicisi yok', $eventName));
+                throw new EventListenerException(sprintf('%s adındaki Event\' in herhangi bir dinleyicisi yok', $event));
+
             }
         } else {
             throw new EventException('Girdiğiniz Event, geçerli bir event değil');
         }
-    }
 
+    }
     /**
      * register a new listener
      *
