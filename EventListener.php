@@ -18,5 +18,12 @@ namespace Anonym\Components\Event;
  */
 abstract class EventListener
 {
-    // do nothing
+
+    /**
+     * handle the event instance
+     *
+     * @return mixed
+     */
+    abstract public function handle();
+
 }
