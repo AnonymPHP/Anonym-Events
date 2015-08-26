@@ -14,11 +14,12 @@ $dispatcher = new \Anonym\Components\Event\EventDispatcher();
 $dispatcher->listen(
     'test',
     function () {
-        echo 'hello world';
+        return 'hello world';
     }
 );
 
-$dispatcher->fire('test');
+$response = $dispatcher->fire('test');
+var_dump($response);
 
 
 

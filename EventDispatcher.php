@@ -44,20 +44,21 @@ class EventDispatcher
      * execute the event
      *
      * @param string|EventDispatch $event the name of event.
-     * @param array|null $parameters the parameters for closure events
+     * @param array $parameters the parameters for closure events
      * @return array the response
      * @throws EventException
      * @throws EventListenerException
      * @throws EventNameException
      * @throws EventNotFoundException
      */
-    public function fire($event = null, array $parameters = null)
+    public function fire($event = null, array $parameters = [])
     {
 
         $response = [];
         list($listeners, $event) = $this->resolveEventAndListeners($event);
 
         foreach ($listeners as $listener) {
+
             $response[] = $listener instanceof Closure ? $this->resolveClosureListener($listener, $parameters) : $this->resolveObjectListener(
                 $listener,
                 $event
