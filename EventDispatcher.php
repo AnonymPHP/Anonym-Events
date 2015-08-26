@@ -54,9 +54,58 @@ class EventDispatcher
     public function fire($event = null, array $parameters = null)
     {
 
+        $response = [];
         list($listeners, $event) = $this->resolveEventAndListeners($event);
 
+        foreach ($listeners as $listener) {
+            $response[] = $listener instanceof Closure ? $this->resolveClosureListener($listener, $parameters) : $this->resolveObjectListener(
+                $listener,
+                $event
+            );
+        }
 
+        return $this->resolveResponseArray($response);
+    }
+
+    /**
+     * resolve the return parameter
+     *
+     * @param array $response
+     * @return mixed
+     */
+    private function resolveResponseArray(array $response)
+    {
+        if ($count =  count($response)) {
+            if ($count === 1) {
+                $response =  $response[0];
+            }
+        }
+        $this->firing[] = $response;
+        return $response;
+    }
+
+    /**
+     * resolve the object listener
+     *
+     * @param \Anonym\Components\Event\EventListener $listener
+     * @param Event $event
+     * @return mixed
+     */
+    private function resolveObjectListener(EventListener $listener, EventDispatch $event)
+    {
+        return call_user_func_array([$listener, 'handle'], $event);
+    }
+
+    /**
+     * resolve the callable listener
+     *
+     * @param Closure $listener
+     * @param array $parameters
+     * @return mixed
+     */
+    private function resolveClosureListener(Closure $listener, array $parameters)
+    {
+        return call_user_func_array($listener, $parameters);
     }
 
     /**
@@ -75,18 +124,19 @@ class EventDispatcher
 
         $name = $event;
         if (is_string($name)) {
-            if ( $this->hasListiner($name) && $listeners = $this->getListeners($name)) {
+            if ($this->hasListiner($name) && $listeners = $this->getListeners($name)) {
                 if (count($listeners) === 1) {
                     $listeners = $listeners[0];
-                    $listeners = $listeners instanceof Closure ?  $listeners : new $listeners;
+                    $listeners = $listeners instanceof Closure ? $listeners : new $listeners;
                 }
-            }else{
+            } else {
                 throw new EventListenerException(sprintf('Your %s event havent got listener'));
             }
         }
-        $listeners = (array) $listeners;
+        $listeners = (array)$listeners;
         return [$listeners, $event];
     }
+
     /**
      * register a new listener
      *
