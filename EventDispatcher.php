@@ -54,17 +54,7 @@ class EventDispatcher
     public function fire($event = null, array $parameters = null)
     {
 
-        $instance = $this->getEventInstance($event);
-
-        if (is_string($event)) {
-            if (isset($this->listeners[$event])) {
-                $event = $this->listeners[$event];
-                $instance = new $event;
-            }
-        } else {
-            $instance = $event;
-            $event = get_class($instance);
-        }
+        list($instance, $event) = $this->getEventInstance($event);
 
         if ($instance instanceof EventDispatch) {
 
@@ -86,16 +76,19 @@ class EventDispatcher
 
     }
 
-
+    /**
+     * @param $event
+     * @return null|string|EventDispatch
+     */
     private function getEventInstance($event)
     {
         if (is_string($event)) {
             if (isset($this->listeners[$event]) && $event = $this->listeners[$event]) {
-                $event = new $event;
+                $event = !$event instanceof Closure ?  new $event : $event;
             }
         }
 
-        return !$event instanceof Closure ? $event: null;
+        return is_object($event) ? [$event, get_class($event)]: [];
     }
     /**
      * register a new listener
