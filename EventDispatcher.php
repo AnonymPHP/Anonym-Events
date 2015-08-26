@@ -10,10 +10,10 @@
 
 namespace Anonym\Components\Event;
 
-use Exception;
-use Anonym\Components\Event\EventCollector;
 use Anonym\Components\Event\Event as EventDispatch;
+use Anonym\Components\Event\EventCollector;
 use Anonym\Components\Event\EventListener;
+use Closure;
 
 /**
  *
@@ -54,7 +54,7 @@ class EventDispatcher
     public function fire($event = null, array $parameters = null)
     {
 
-        $event = $this->resolveEventListeners($event);
+        $instance = $this->getEventInstance($event);
 
         if (is_string($event)) {
             if (isset($this->listeners[$event])) {
@@ -86,6 +86,17 @@ class EventDispatcher
 
     }
 
+
+    private function getEventInstance($event)
+    {
+        if (is_string($event)) {
+            if (isset($this->listeners[$event]) && $event = $this->listeners[$event]) {
+                $event = new $event;
+            }
+        }
+
+        return !$event instanceof Closure ? $event: null;
+    }
     /**
      * register a new listener
      *
