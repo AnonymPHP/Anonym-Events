@@ -54,33 +54,19 @@ class EventDispatcher
     public function fire($event = null, array $parameters = null)
     {
 
-        list($listeners, $event) = $this->getEventInstance($event);
+        list($listeners, $event) = $this->resolveEventAndListeners($event);
 
-        if ($instance instanceof EventDispatch) {
-
-            if ($this->hasListiner($event)) {
-                $listeners = (array)$this->getListeners($event);
-                $response = $this->runListenersHandle($listeners, $instance);
-                if (count($response) === 1) {
-                    $response = $response[0];
-                }
-                $this->firing[] = $response;
-                return $response;
-            } else {
-                throw new EventListenerException(sprintf('%s adındaki Event\' in herhangi bir dinleyicisi yok', $event));
-
-            }
-        } else {
-            throw new EventException('Girdiğiniz Event, geçerli bir event değil');
-        }
 
     }
 
     /**
-     * @param $event
+     * resolve the event and listener
+     *
+     * @param mixed $event
+     * @throws EventListenerException
      * @return null|string|EventDispatch
      */
-    private function getEventInstance($event)
+    private function resolveEventAndListeners($event)
     {
 
         if (is_object($event) && $event instanceof EventDispatch) {
@@ -94,10 +80,11 @@ class EventDispatcher
                     $listeners = $listeners[0];
                     $listeners = $listeners instanceof Closure ?  $listeners : new $listeners;
                 }
+            }else{
+                throw new EventListenerException(sprintf('Your %s event havent got listener'));
             }
         }
-
-
+        $listeners = (array) $listeners;
         return [$listeners, $event];
     }
     /**
