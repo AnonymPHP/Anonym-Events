@@ -9,6 +9,7 @@
  */
 
 namespace Anonym\Components\Event;
+
 use Exception;
 use Anonym\Components\Event\EventCollector;
 use Anonym\Components\Event\Event as EventDispatch;
@@ -38,18 +39,22 @@ class EventDispatcher
 
         $this->listeners = EventCollector::getListeners();
     }
+
     /**
      * execute the event
      *
      * @param string|EventDispatch $event the name of event.
+     * @param array|null $parameters the parameters for closure events
      * @return array the response
      * @throws EventException
      * @throws EventListenerException
      * @throws EventNameException
      * @throws EventNotFoundException
      */
-    public function fire($event = null)
+    public function fire($event = null, array $parameters = null)
     {
+
+        $event = $this->resolveEventListeners($event);
 
         if (is_string($event)) {
             if (isset($this->listeners[$event])) {
@@ -80,6 +85,7 @@ class EventDispatcher
         }
 
     }
+
     /**
      * register a new listener
      *
@@ -87,7 +93,7 @@ class EventDispatcher
      * @param string|EventListener $listener the name or instance of event listener
      * @return $this
      */
-    public function register($name, $listener)
+    public function listen($name, $listener)
     {
         EventCollector::addListener($name, $listener);
         return $this;
@@ -109,12 +115,17 @@ class EventDispatcher
             if ($listener instanceof EventListener) {
                 $response[] = call_user_func_array([$listener, 'handle'], [$eventName]);
             } else {
-                throw new EventListenerException(sprintf('%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
-                    get_class($listener)));
+                throw new EventListenerException(
+                    sprintf(
+                        '%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
+                        get_class($listener)
+                    )
+                );
             }
         }
         return $response;
     }
+
     /**
      * return the registered listeners
      *
