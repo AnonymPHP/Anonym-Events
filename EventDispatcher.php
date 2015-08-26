@@ -54,7 +54,7 @@ class EventDispatcher
     public function fire($event = null, array $parameters = null)
     {
 
-        list($instance, $event) = $this->getEventInstance($event);
+        list($listeners, $event) = $this->getEventInstance($event);
 
         if ($instance instanceof EventDispatch) {
 
@@ -82,13 +82,23 @@ class EventDispatcher
      */
     private function getEventInstance($event)
     {
-        if (is_string($event)) {
-            if (isset($this->listeners[$event]) && $event = $this->listeners[$event]) {
-                $event = !$event instanceof Closure ?  new $event : $event;
+
+        if (is_object($event) && $event instanceof EventDispatch) {
+            $event = get_class($event);
+        }
+
+        $name = $event;
+        if (is_string($name)) {
+            if ( $this->hasListiner($name) && $listeners = $this->getListeners($name)) {
+                if (count($listeners) === 1) {
+                    $listeners = $listeners[0];
+                    $listeners = $listeners instanceof Closure ?  $listeners : new $listeners;
+                }
             }
         }
 
-        return is_object($event) ? [$event, get_class($event)]: [];
+
+        return [$listeners, $event];
     }
     /**
      * register a new listener
@@ -103,32 +113,6 @@ class EventDispatcher
         return $this;
     }
 
-    /**
-     * execute the listeners
-     *
-     * @param array $listeners the list of listeners
-     * @param null $eventName the name of event
-     * @throws EventListenerException
-     * @return array
-     */
-    private function runListenersHandle(array $listeners = [], $eventName = null)
-    {
-        $response = [];
-        foreach ($listeners as $listener) {
-            $listener = new $listener();
-            if ($listener instanceof EventListener) {
-                $response[] = call_user_func_array([$listener, 'handle'], [$eventName]);
-            } else {
-                throw new EventListenerException(
-                    sprintf(
-                        '%s listener sınıfı EventListenerInterface\' e sahip olmalıdır',
-                        get_class($listener)
-                    )
-                );
-            }
-        }
-        return $response;
-    }
 
     /**
      * return the registered listeners
@@ -142,7 +126,8 @@ class EventDispatcher
         if (!is_string($eventName)) {
             throw new EventNameException('Event adı geçerli bir string değeri olmalıdır');
         }
-        return $this->listeners[$eventName];
+
+        return EventCollector::getListeners()[$eventName];
     }
 
     /**
@@ -153,7 +138,8 @@ class EventDispatcher
      */
     public function hasListiner($eventName = '')
     {
-        return isset($this->listeners[$eventName]);
+        $listeners = EventCollector::getListeners();
+        return isset($listeners[$eventName]);
     }
 
     /**
