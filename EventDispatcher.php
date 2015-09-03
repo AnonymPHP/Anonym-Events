@@ -59,11 +59,13 @@ class EventDispatcher
 
         foreach ($listeners as $listener) {
 
-            $response[] = $listener instanceof Closure ? $this->resolveClosureListener($listener, $parameters) : $this->resolveObjectListener(
+            $response[] = $listener instanceof Closure ? $this->resolveClosureListener($listener,
+                $parameters) : $this->resolveObjectListener(
                 $listener,
                 $event
             );
         }
+
 
         return $this->resolveResponseArray($response);
     }
@@ -76,12 +78,13 @@ class EventDispatcher
      */
     private function resolveResponseArray(array $response)
     {
-        if ($count =  count($response)) {
+        if ($count = count($response)) {
             if ($count === 1) {
-                $response =  $response[0];
+                $response = $response[0];
             }
         }
         $this->firing[] = $response;
+
         return $response;
     }
 
@@ -94,7 +97,7 @@ class EventDispatcher
      */
     private function resolveObjectListener(EventListener $listener, EventDispatch $event)
     {
-        return call_user_func_array([$listener, 'handle'], $event);
+        return call_user_func_array([$listener, 'handle'], [$event]);
     }
 
     /**
@@ -120,21 +123,22 @@ class EventDispatcher
     {
 
         if (is_object($event) && $event instanceof EventDispatch) {
-            $event = get_class($event);
+            $name = get_class($event);
+        } else {
+            $name = $event;
         }
 
-        $name = $event;
         if (is_string($name)) {
             if ($this->hasListiner($name) && $listeners = $this->getListeners($name)) {
                 if (count($listeners) === 1) {
                     $listeners = $listeners[0];
-                    $listeners = $listeners instanceof Closure ? $listeners : new $listeners;
+                    $listeners = $listeners instanceof Closure ? $listeners : [(new $listeners)];
                 }
             } else {
-                throw new EventListenerException(sprintf('Your %s event havent got listener'));
+                throw new EventListenerException(sprintf('Your %s event havent got listener', $event));
             }
         }
-        $listeners = (array)$listeners;
+
         return [$listeners, $event];
     }
 
@@ -148,6 +152,7 @@ class EventDispatcher
     public function listen($name, $listener)
     {
         EventCollector::addListener($name, $listener);
+
         return $this;
     }
 
@@ -177,6 +182,7 @@ class EventDispatcher
     public function hasListiner($eventName = '')
     {
         $listeners = EventCollector::getListeners();
+
         return isset($listeners[$eventName]);
     }
 
