@@ -132,7 +132,7 @@ class EventDispatcher
             if ($this->hasListiner($name) && $listeners = $this->getListeners($name)) {
                 if (count($listeners) === 1) {
                     $listeners = $listeners[0];
-                    $listeners = $listeners instanceof Closure ? $listeners : [(new $listeners)];
+                    $listeners = [$listeners instanceof Closure ? $listeners : (new $listeners)];
                 }
             } else {
                 throw new EventListenerException(sprintf('Your %s event havent got listener', $event));
