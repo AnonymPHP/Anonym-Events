@@ -24,10 +24,5 @@
     "psr-4": {
       "Anonym\\Components\\Event\\": ""
     }
-  },
-  "extra": {
-    "branch-alias": {
-      "1.2-dev": "1.2"
-    }
   }
 }
